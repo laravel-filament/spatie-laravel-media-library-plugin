@@ -261,6 +261,19 @@ class SpatieMediaLibraryFileUpload extends FileUpload
             ->each(fn (Media $media) => $media->delete());
     }
 
+    public function getAcceptedFileTypes(): ?array
+    {
+        if (! $this->acceptedFileTypes) {
+            $this->acceptedFileTypes(
+                $this->getRecord()
+                    ->getMediaCollection($this->getCollection() ?? 'default')
+                    ->acceptsMimeTypes
+            );
+        }
+
+        return parent::getAcceptedFileTypes();
+    }
+
     public function getDiskName(): string
     {
         if ($diskName = $this->evaluate($this->diskName)) {
